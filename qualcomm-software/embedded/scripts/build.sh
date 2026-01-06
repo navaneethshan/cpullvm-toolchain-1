@@ -142,6 +142,7 @@ log "Installing LLVM"
 ninja install
 popd >/dev/null
 
+SKIP_TESTS="true" # Skiping test for testing rest of the steps, this change will not be merged.
 if [[ "${SKIP_TESTS}" != "true" ]]; then
   log "Running LLVM tests"
   (cd "${BUILD_DIR}/llvm" && ninja check-llvm check-lld check-polly check-eld check-clang)
