@@ -15,7 +15,7 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
-    if: github.repository == 'sriyalamar/cpullvm-toolchain'
+    if: github.repository == 'navaneethshan/cpullvm-toolchain-1'
     strategy:
       matrix:
         branches:
@@ -41,8 +41,8 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Configure Git Identity
         run: |
-          git config --local user.name "Sri Lakshmi"
-          git config --local user.email "syalamar@qti.qualcomm.com"
+          git config --local user.name "cpullvm bot"
+          git config --local user.email "cpullvmbot@qti.qualcomm.com"
       - name: Fetch Branches
         run: |
           git remote set-branches --add origin ${{ matrix.branches.from_branch }}

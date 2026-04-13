@@ -9,7 +9,7 @@ on:
 jobs:
   Fetch-Upstream:
     runs-on: ubuntu-latest
-    if: github.repository == 'sriyalamar/cpullvm-toolchain'
+    if: github.repository == 'navaneethshan/cpullvm-toolchain-1'
     strategy:
       matrix:
         branch: [main]
@@ -33,7 +33,7 @@ jobs:
         run: git pull --ff-only upstream ${{ matrix.branch }}
       - name: Configure Git Identity
         run: |
-          git config --local user.name "Sri Lakshmi"
-          git config --local user.email "syalamar@qti.qualcomm.com"
+          git config --local user.name "CPULLVM BOT"
+          git config --local user.email "cpullvmbot@qti.qualcomm.com"
       - name: Push Changes
         run: git push origin ${{ matrix.branch }}
