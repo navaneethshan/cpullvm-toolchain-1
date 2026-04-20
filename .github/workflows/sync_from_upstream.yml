@@ -1,6 +1,6 @@
 # This workflow fetches changes from relevant branches from the
 # llvm/llvm-project repository (upstream) into the corresponding branches
-# in the sriyalamar/cpullvm-toolchain repository (downstream), keeping them in sync.
+# in the qualcomm/cpullvm-toolchain repository (downstream), keeping them in sync.
 name: Sync from Upstream LLVM
 on:
   schedule:
@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 jobs:
   Fetch-Upstream:
-    runs-on: ubuntu-latest
-    if: github.repository == 'navaneethshan/cpullvm-toolchain-1'
+    runs-on: ubuntu-24.04-arm
+    if: github.repository == 'sriyalamar/cpullvm-toolchain'
     strategy:
       matrix:
         branch: [main]
@@ -33,7 +33,7 @@ jobs:
         run: git pull --ff-only upstream ${{ matrix.branch }}
       - name: Configure Git Identity
         run: |
-          git config --local user.name "CPULLVM BOT"
-          git config --local user.email "nshanmug@qti.qualcomm.com"
+          git config --local user.name "cpullvmbot"
+          git config --local user.email "cpullvmbot@qti.qualcomm.com"
       - name: Push Changes
         run: git push origin ${{ matrix.branch }}
