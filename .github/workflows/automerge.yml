@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     permissions:
       pull-requests: write
-    if: github.repository == 'sriyalamar/cpullvm-toolchain'
+    if: github.repository == 'nshanmug/cpullvm-toolchain-1'
     strategy:
       matrix:
         branches:
