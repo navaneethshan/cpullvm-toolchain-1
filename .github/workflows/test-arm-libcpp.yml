@@ -14,18 +14,27 @@ jobs:
 
       - name: Install dependencies
         run: |
+          set -euxo pipefail
+
           sudo apt-get update
-          # existing deps
+
+          # Core deps
           sudo apt-get install -y swig libedit-dev
 
-          #sudo apt-get install -y libc++-dev libc++abi-dev
-          sudo apt-get install -y libc++-dev
+          # ✅ Install aligned toolchain (important fix)
+          sudo apt-get install -y clang-19 libc++-19-dev libc++abi-19-dev libunwind-19-dev
 
           # meson
           pip install meson==1.10.0
 
+          # ensure we use correct compiler
+          echo "CC=clang-19" >> $GITHUB_ENV
+          echo "CXX=clang++-19" >> $GITHUB_ENV
+
       - name: Build and run test program
         run: |
+          set -euxo pipefail
+
           cat <<'EOF' > test.cpp
           #include <iostream>
 
@@ -35,5 +44,28 @@ jobs:
           }
           EOF
 
-          clang++ -std=c++17 -stdlib=libc++ test.cpp -o test_clang
+          $CXX -std=c++17 -stdlib=libc++ test.cpp -o test_clang
           ./test_clang
+
+      - name: Diagnostics (libc++ / headers)
+        run: |
+          set -euxo pipefail
+
+          which clang++ || true
+          clang++ --version || true
+          $CXX --version || true
+
+          echo "== clang include search path (should mention c++/v1) =="
+          echo | $CXX -v -x c++ -stdlib=libc++ -E - 2>&1 | sed -n '/#include <...> search starts here:/,/End of search list./p'
+
+          echo "== where is cstdint on disk? =="
+          dpkg -L libc++-19-dev | grep -E '/cstdint$|/c\+\+/v1' || true
+          ls -la /usr/include/c++/v1/cstdint || true
+
+          echo "== compile a trivial cstdint include with libc++ =="
+          cat > /tmp/t.cc <<'EOF'
+          #include <cstdint>
+          int main(){ std::uint32_t x=0; return (int)x; }
+          EOF
+
+          $CXX -stdlib=libc++ /tmp/t.cc -c -o /tmp/t.o
