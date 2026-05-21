@@ -19,8 +19,9 @@ jobs:
           sudo apt-get install -y swig libedit-dev
 
           #sudo apt-get install -y libc++-dev libc++abi-dev
+          sudo apt-get install -y libc++-dev
 
-          # meson (your script)
+          # meson
           pip install meson==1.10.0
 
       - name: Build and run test program
