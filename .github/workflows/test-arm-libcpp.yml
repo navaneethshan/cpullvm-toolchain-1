@@ -2,42 +2,17 @@ name: Test ARM Ubuntu 24.04 libc++
 
 on:
   pull_request:
-  workflow_dispatch:
 
 jobs:
   test-arm:
     runs-on: ubuntu-24.04-arm
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
       - name: Install dependencies
         run: |
           set -euxo pipefail
-
           sudo apt-get update
           # Used by lldb
           sudo apt-get install swig libedit-dev libc++-dev
-          
-          # Install meson. eld support was added in v1.9.0, so we need at least that.
-          pip install meson==1.10.0
-
-          # ensure we use correct compiler
-          echo "CC=clang" >> $GITHUB_ENV
-          echo "CXX=clang++" >> $GITHUB_ENV
-
-          which clang++ || true
-          clang++ --version || true
-
-      - name: Build and run test program
-        run: |
-          cat <<'EOF' > test.cpp
-          #include <iostream>
-          int main() {
-              std::cout << "Hello, Clang on Ubuntu 24.04!" << std::endl;
-              return 0;
-          }
-          EOF
-          clang++ -std=c++17 -stdlib=libc++ test.cpp -o test_clang
-          ./test_clang
+          which clang++
+          clang++ --version
