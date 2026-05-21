@@ -30,14 +30,14 @@ jobs:
           which clang++ || true
           clang++ --version || true
 
-          - name: Build and run test program
-            run: |
-              cat <<'EOF' > test.cpp
-              #include <iostream>
-              int main() {
-                  std::cout << "Hello, Clang on Ubuntu 24.04!" << std::endl;
-                  return 0;
-              }
-              EOF
-              clang++ -std=c++17 -stdlib=libc++ test.cpp -o test_clang
-              ./test_clang
+      - name: Build and run test program
+        run: |
+          cat <<'EOF' > test.cpp
+          #include <iostream>
+          int main() {
+              std::cout << "Hello, Clang on Ubuntu 24.04!" << std::endl;
+              return 0;
+          }
+          EOF
+          clang++ -std=c++17 -stdlib=libc++ test.cpp -o test_clang
+          ./test_clang
