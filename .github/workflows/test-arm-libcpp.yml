@@ -1,0 +1,38 @@
+name: Test ARM Ubuntu 24.04 libc++
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-arm:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          # existing deps
+          sudo apt-get install -y swig libedit-dev
+
+          #sudo apt-get install -y libc++-dev libc++abi-dev
+
+          # meson (your script)
+          pip install meson==1.10.0
+
+      - name: Build and run test program
+        run: |
+          cat <<'EOF' > test.cpp
+          #include <iostream>
+
+          int main() {
+              std::cout << "Hello, Clang on Ubuntu 24.04!" << std::endl;
+              return 0;
+          }
+          EOF
+
+          clang++ -std=c++17 -stdlib=libc++ test.cpp -o test_clang
+          ./test_clang
